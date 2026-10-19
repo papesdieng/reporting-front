@@ -1,0 +1,109 @@
+
+<section class="trades-page">
+  <div class="page-header">
+    <div>
+      <h1>Trade Reporting</h1>
+      <p>List of market transactions</p>
+    </div>
+
+    <button
+      type="button"
+      (click)="loadTrades()"
+      [disabled]="isLoading">
+      Refresh
+    </button>
+  </div>
+  <div class="table-toolbar">
+    <div class="search-bar">
+      <label for="trader-search">Filter by trader</label>
+      <input
+        id="trader-search"
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Ex. Pape"
+      />
+    </div>
+    <p class="results-count">
+      <span>Number of results</span>
+      <strong>{{ filteredTrades.length }}</strong>
+    </p>
+  </div>
+
+  @if (isLoading) {
+    <p class="status">Loading trades...</p>
+  } @else if (errorMessage) {
+    <p class="error" role="alert">{{ errorMessage }}</p>
+    <button type="button" (click)="loadTrades()">
+      Retry
+    </button>
+  } @else {
+    <div class="table-container">
+      <table>
+  <thead>
+    <tr>
+      <th>
+        <button (click)="onSort('id')">
+          ID
+          @if (sortColumn === 'id') {
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          }
+        </button>
+      </th>
+
+      <th>
+        <button (click)="onSort('price')">
+          PRICE
+          @if (sortColumn === 'price') {
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          }
+        </button>
+      </th>
+
+      <th>
+        <button (click)="onSort('currency')">
+          CURRENCY
+          @if (sortColumn === 'currency') {
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          }
+        </button>
+      </th>
+
+      <th>
+        <button (click)="onSort('traderName')">
+          TRADER NAME
+          @if (sortColumn === 'traderName') {
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          }
+        </button>
+      </th>
+
+      <th>
+        <button (click)="onSort('maturityDate')">
+          MATURITY DATE
+          @if (sortColumn === 'maturityDate') {
+            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          }
+        </button>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (trade of sortedTrades; track trade.id) {
+      <tr>
+        <td>{{ trade.id }}</td>
+        <td>{{ trade.price }}</td>
+        <td>{{ trade.currency }}</td>
+        <td>{{ trade.traderName }}</td>
+        <td>{{ trade.maturityDate | date:'dd/MM/yyyy' }}</td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="5">No trades found.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+    </div>
+  }
+</section>
