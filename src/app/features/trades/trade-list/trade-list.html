@@ -8,8 +8,8 @@
 
     <button
       type="button"
-      (click)="loadTrades()"
-      [disabled]="isLoading">
+      (click)="trades.reload()"
+      [disabled]="trades.isLoading()">
       Refresh
     </button>
   </div>
@@ -29,11 +29,13 @@
     </p>
   </div>
 
-  @if (isLoading) {
+  @if (trades.isLoading()) {
     <p class="status">Loading trades...</p>
-  } @else if (errorMessage) {
-    <p class="error" role="alert">{{ errorMessage }}</p>
-    <button type="button" (click)="loadTrades()">
+  } @else if (trades.error()) {
+    <p class="error" role="alert">
+      Error loading trades. Please check that the API is available.
+    </p>
+    <button type="button" (click)="trades.reload()">
       Retry
     </button>
   } @else {
