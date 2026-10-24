@@ -1,5 +1,5 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Trade } from '../../../models/trade';
 import { TradeService } from '../../../services/trade.service';
@@ -26,7 +26,7 @@ export class TradeListComponent {
   private readonly tradeService = inject(TradeService);
 
   readonly trades = this.tradeService.trades;
-  searchTerm = '';
+  searchTerm = signal('');
 
   sortColumn: SortColumn = 'id';
   sortDirection: SortDirection = 'asc';
@@ -42,7 +42,11 @@ onSort(column: SortColumn): void {
 }
 // Filters the trades based on the search term
   get filteredTrades(): Trade[] {
-  const term = this.searchTerm.trim().toLowerCase();
+  const term = this.searchTerm().trim().toLowerCase();
+
+    if (this.trades.error()) {
+      return [];
+    }
 
     return (this.trades.value() ?? []).filter(trade =>
     trade.traderName.toLowerCase().includes(term)
