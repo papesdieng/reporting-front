@@ -23,10 +23,11 @@
         (ngModelChange)="searchTerm.set($event)"
         placeholder="Ex. Pape"
       />
+
     </div>
     <p class="results-count">
       <span>Number of results</span>
-      <strong>{{ filteredTrades.length }}</strong>
+      <strong>{{ filteredTrades().length }}</strong>
     </p>
   </div>
 
@@ -47,8 +48,8 @@
       <th>
         <button (click)="onSort('id')">
           ID
-          @if (sortColumn === 'id') {
-            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          @if (sortColumn() === 'id') {
+            {{ sortDirection() === 'asc' ? '↑' : '↓' }}
           }
         </button>
       </th>
@@ -56,8 +57,8 @@
       <th>
         <button (click)="onSort('price')">
           PRICE
-          @if (sortColumn === 'price') {
-            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          @if (sortColumn() === 'price') {
+            {{ sortDirection() === 'asc' ? '↑' : '↓' }}
           }
         </button>
       </th>
@@ -65,8 +66,8 @@
       <th>
         <button (click)="onSort('currency')">
           CURRENCY
-          @if (sortColumn === 'currency') {
-            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          @if (sortColumn() === 'currency') {
+            {{ sortDirection() === 'asc' ? '↑' : '↓' }}
           }
         </button>
       </th>
@@ -74,8 +75,8 @@
       <th>
         <button (click)="onSort('traderName')">
           TRADER NAME
-          @if (sortColumn === 'traderName') {
-            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          @if (sortColumn() === 'traderName') {
+            {{ sortDirection() === 'asc' ? '↑' : '↓' }}
           }
         </button>
       </th>
@@ -83,8 +84,8 @@
       <th>
         <button (click)="onSort('maturityDate')">
           MATURITY DATE
-          @if (sortColumn === 'maturityDate') {
-            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+          @if (sortColumn() === 'maturityDate') {
+            {{ sortDirection() === 'asc' ? '↑' : '↓' }}
           }
         </button>
       </th>
@@ -92,7 +93,7 @@
   </thead>
 
   <tbody>
-    @for (trade of sortedTrades; track trade.id) {
+    @for (trade of sortedTrades(); track trade.id) {
       <tr>
         <td>{{ trade.id }}</td>
         <td>{{ trade.price }}</td>
