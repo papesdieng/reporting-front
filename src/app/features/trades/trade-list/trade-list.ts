@@ -1,5 +1,5 @@
 
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Trade } from '../../../models/trade';
 import { TradeService } from '../../../services/trade.service';
@@ -22,42 +22,14 @@ type SortDirection = 'asc' | 'desc';
   templateUrl: './trade-list.html',
   styleUrl: './trade-list.css',
 })
-export class TradeListComponent implements OnInit {
+export class TradeListComponent {
   private readonly tradeService = inject(TradeService);
-  private readonly changeDetector = inject(ChangeDetectorRef);
 
-  trades: Trade[] = [];
-  isLoading = false;
-  errorMessage = '';
+  readonly trades = this.tradeService.trades;
   searchTerm = '';
 
   sortColumn: SortColumn = 'id';
   sortDirection: SortDirection = 'asc';
-
-// Lifecycle hook that is called after the component has been initialized
-  ngOnInit(): void {
-    this.loadTrades();
-  }
-// Loads trades from the TradeService and handles loading state and errors
-  loadTrades(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    this.tradeService.getTrades().subscribe({
-      next: (trades) => {
-        this.trades = trades;
-        this.isLoading = false;
-        this.changeDetector.markForCheck();
-      },
-      error: (error) => {
-        console.error('Error when loading trades', error);
-        this.errorMessage =
-          'Error loading trades. Please check that the API is available.';
-        this.isLoading = false;
-        this.changeDetector.markForCheck();
-      }
-    });
-  }
 
 onSort(column: SortColumn): void {
   if (this.sortColumn === column) {
@@ -72,7 +44,7 @@ onSort(column: SortColumn): void {
   get filteredTrades(): Trade[] {
   const term = this.searchTerm.trim().toLowerCase();
 
-  return this.trades.filter(trade =>
+    return (this.trades.value() ?? []).filter(trade =>
     trade.traderName.toLowerCase().includes(term)
   );
 }
